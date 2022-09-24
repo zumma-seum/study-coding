@@ -1,0 +1,389 @@
+<clone wetube>
+1.git init(터미널)
+2.git hub에서 new repository
+3.(터미널)git remote add origin https://github.com/zumma-seum/wetube-reloaded
+4.npm init -> package.json파일을 만들어 준다. "main"은 프로젝트의 대표 파일. 우리가 만들고 배포한
+패키지를 다른 사람들이 설치하면 main을 사용하게 된다. author, despcription 등 지워도 상관없음.
+5.index.js(console.log~~ 등) 파일을 만들고 (터미널)node index.js -> index.js가 실행.
+6.package.json에서 
+  "scripts": {
+	"win": "node index.js"
+  }  -> (터미널) npm run win -> index.js 실행.
+7.npm i express(터미널) -> package.json이 있는 폴더에서 실행. node_modules, package-lock.json등 생김.
+  package.json dependencies 에 express 추가됨. ,
+ express란 'Node.js를 위한 빠르고 개방적인 간결한 웹 프레임워크' js를 브라우저 밖으로 끌어내 백엔드 등에서도 사용할 수
+ 있게 만든게 nodejs. nodejs를 사용하기 위해 필요한 것이 exress. 최신 js를 nodejs가(?) 이해하지 못할때 그걸 
+ 올드한 js로 바꿔주는게 babel.
+  *npm i --> dependencies 에 저장된 파일을 알아서 깔아줌, package.json과 index.js 파일만 보내주면 됨
+8.bableljs.io 에서 babel을 깔아줌. babel은 최신 자바스크립트를 nodeJS가 이용할수 있게 컴파일해줌.
+  npm install --save-dev @babel/core 설치. devDependencies에 babel이 등록됨
+  *.gitignore 파일을 만든다.
+    /node_modules
+9.package.json이 있는 곳에 babel.config.json파일을 만든다. 바벨 사이트에 나온대로 
+  {
+    "presets": ["@babel/preset-env"]
+  }
+10. npm i @babel/preset-env --sav-dev  -> preset은 바벨을위한 거대한 플러그인.
+11. npm install @babel/node --save-dev -> babel을 직접적으로 js에서 사용하지 않기위해.
+12. package.json 에서 
+  "scripts": {
+	"dev": "babel-node index.js"
+  }  고쳐준다. 바벨을 이용할 수 있음. npm run dev
+13. 바벨 사이트에서 nodemon 을 볼 수 있음. 반복적으로 save후 동일한 명령어를 실행시킬 필요가 없어짐.
+    npm i nodemon --save-dev
+14.package.json에서 
+  "scripts": {
+	"dev": "nodemon --exec babel-node index.js"
+  }
+15.src 폴더를 만들고 index.js를 옮겨줌. 파일 이름도 server.js로 바꿔줌. 모든 파일을 여기에.
+------------------------------------------------------------------------------
+1.server.js =>
+   import express from "express";
+   const PORT = 4000;
+   const app = express();
+        <-- 여기에 작성 -->
+   const handleListening = () => console.log(`server listening on port http://localhost:${PORT}`);
+   app.listen(PORT, handleListening);
+2.const handleHome = (req,res) => {
+	return res.end();
+  }
+  app.get("/",handleHome);
+---------------------------------------------------------------------
+1. <middleware>
+   const gossipMiddleware = (req,res,next) => {
+        console.log(`${req.method}: ${req.url}`);
+	next();
+   };
+   const handleHome = (req,res) => {
+	return res.send("I love middlewares");
+   };
+   app.get("/", gossipMiddleware,handleHome);
+2.app.use()  -> global middleware를 만들 수 있게 해줌. 어느 url에도 작동하는 middleware.
+  순서중요. middleware를 use하는게 먼저오고 그 다음에 url의 get이 와야함. 모든 라우터에서 사용가능.
+--------------------------------------------------------------------
+1.npm i morgan  -> morgan은 node.js용 request logger middleware
+2.import morgan from "morgan";
+  app.use(morgan("dev"));
+--------------------------------------------------------------------
+1. router  -> 컨트롤러와 url의 관리를 쉽게 해줌.
+const globalRouter = express.Router();
+const home = (req, res) => res.send("home");
+globalRouter.get("/", home);
+-------------------------------------------------------------------
+export const watch(req,res) => {
+	console.log(req.params);
+	return res.send("watch");
+}
+-> videoRouter.get(":/potato",watch)  -> URL Parameters
+   /videos/12121212/watch
+-> potato:'12121212' 로 params결과를 볼 수 있음.
+--------------------------------------------------------------------
+express 라우팅(url parameters part two) regular expression
+모든 언어는  regular expression을 가지고 있고 매우 유용. 문자열로부터 특정정보를 추출해내는 방법.
+-> app.get('/ab+cd', function(req,res){
+     res.send('ab+cd') })
+->videoRouter.get("/:id(\\d+)",see);  -> 숫자만 추출, js라 \추가
+--------------------------------------------------------------------
+(pug) template engine 템플릿을 이용해서 뷰를 만드는걸 돕는다. pugjs.org
+* 1) npm install pug, 그 다음 express에게 html 헬퍼로 pug를 쓰겠다고 말해야함.
+  2) express 문서를 찾아보면 view engine을 볼 수 있다.
+   server에 app.set("view engine", "pug"); 추가. view engine을 pug로 셋팅.
+  3) 실제로 pug파일을 만든다. express는 view 폴더를 찾아본다. src 폴더에 views 폴더를 만든다.
+    그리고 views 폴더 안데 pug파일을 만든다.
+  4) pug -> 모든건 소문자로 작성, 속성이 있으면 괄호안에 작성. 부모 속성보다 안쪽에 있어야 하므로 
+     2칸 띄우거나 탭.
+  5) home.pug
+     doctype html 
+     html(lang="ko")
+     head 
+         title Wetube 
+     body 
+         h1 Welcome to Wetube 
+         footer &copy; 2022 Wetube
+  6) 이 파일을 어떻게 유저에게 보낼까.
+     실제로는 이 파일을 pug에게 보내고 pug가 이 파일을 렌더링해서 평범한 html로 변환해 준다.
+     user는 home.pug를 볼일이 없다.
+     videoController.js 에
+     export const trending = (req, res) => res.render("home");
+     이렇게 pug파일을 연결시켜 준다. express가 views 디렉토리에서 pug파일을 찾도록 설정되어 있기때문에
+     따로 import 하거나 하지 않는다. 그저 res.render로 home.pug를 렌더링하면 된다.
+     그럼 여기서 pug파일이 아닌 html 파일을 렌더링해도 되는거 아닌가?? 구지 pug파일을 써야 하지는 않지 않을까?
+     물론 편의를 위해서 써도.
+     기본적으로 express는 views폴더를 wetube에서 찾는다. 하지만 우리는 views를 src에 넣었다.
+     server.js 에 console.log(process.cwd()); 추가해본다.
+     cwd -> 현재 작업 디렉토리. current working directory, 서버를 기동하는 파일의 위치에 따라
+     결정된다. who is startig the server? 어디에서 node.js를 부르고 있는지에 따라. 
+     package.json 이 node.js를 부르고 서버를 실행한다.
+     package.json 이 node.js를 실행하고 있다. 그래서 package.json이 있는 곳이 cwd가 된다.
+     server.js 가 위치한 src가 아닌.
+* 해결 1) views 폴더를 src 밖으로 꺼낸다^^;;;
+      2) server.js 에서 veiws의 위치를 바꾼다.
+        app.set("views", process.cwd() + "/src/views");
+
+  (잡담: express 문서중 x-powered-by -> express로 서버를 만들면 헤더에서 X-Powered-By:Express를 보여준다.
+        사람들은 express로 내가 서버를 만든걸 알게 된다. 이걸 숨기고 싶을 때 사용.)
+7) pug 장점: -간단하게 html 작성.
+           - 자바스크립트를 간단히 넣을 수 있다. pug 는 자바스크립트.  footer &copy; #{} Wetube -> #{} pug가 변수를 쓰거나 자바스크립트를 쓰는 방법.
+           ( new Date().getFullYear() ) ->  footer &copy; #{new Date().getFullYear()} Wetube
+ 	   - 반복할 필요가 없다. -> partial 
+                 views/partials/footer.pug 만든다.
+                 다른 파일에서 include partials/footer.pug 로 사용할수 있음.
+              --> extending templates : base.pug를 만들고 다른 파일에서 extends base.pug로 사용가능.
+                  내용에 변화를 주고 싶은 부분
+                  base.pug -> block content 
+                  home.pug -> block content 
+    				h1 Home!
+              --> varialbels to templates: 변수를 어떻게 보낼수 있을까? 누가 페이지를 렌더링하지?
+                       contrller. render(view name, 템플릿에보낼 변수)
+                  base.pug -> title #{pageTitle} | Wetube 
+                  videoContrller.js -> export const trending = (req, res) => res.render("home", {pageTitle:"Home"});
+  (파일명: 띄어쓰기 안된다. 모두 소문자로)
+----------------------------------------------------------------------------------
+* 간단한 css를 위해 MVP Styles
+       https://andybrewer.github.io/mvp 접속. A minimalist stylesheet for HTML elements
+       html ->  <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+       pug -> link(rel="stylesheet" href="https://unpkg.com/mvp.css") head에 추가
+-------------------------------------------------------------------------
+(pug conditionals)
+* title #{pageTitle} | Wetube
+  h1=pageTitle  /* #{pageTitle}과 같다. 변수로 인식. variavle이 다른 text와 섞여서 쓰이고 있지 않으면 이렇게 쓰면 됨 */
+*   	 nav     
+            ul  
+                if fakeUser.loggedIn
+                    li 
+                        a(href="/login") Log out
+                else
+                    li
+                        a(href="/login") Login
+---------------------------------------------------------------------------
+(pug Iteration)
+*export const trending = (req, res) => {
+    const videos = [1,2,3,4,5,6,7,8,9,10];
+    return res.render("home", {pageTitle:"Home", videos});
+}
+*ul 
+   each video in videos 
+      li=video
+   else    
+      li Sorry nothing found.  /* 이건 자바스크립트가 아니고 pug라네 */
+* export const trending = (req, res) => {
+    const videos = [
+        {
+            title: "Hello",
+        },
+        {
+            title: "good",
+        },
+        {
+            title: "whatsup",
+        },
+        {
+            title: "happy",
+        }
+    ];
+    return res.render("home", {pageTitle:"Home", videos});
+}
+* each video in videos 
+     li=video.title
+----------------------------------------------------------------------------
+(MIXINS) 믹스인(Mixins)은 여러 컴포넌트 간에 공통으로 사용하고 있는 로직, 기능들을 재사용하는 방법입니다.
+  데이터를 받을 수 있는 partial.만약 우리가 반복해서 등장하는 html 블록이 필요한데, 같은 형태를 지니지만
+  서로 다른 데이터를 가져야 한다면?
+* const videos = [
+        {
+            title: "first Hello",
+            rating: 5,
+            comments: 2,
+            createdAt: "10 minutes ago",
+            views: 59,
+            id: 1,
+        },
+        {
+            title: "second good",
+            rating: 3,
+            comments: 1,
+            createdAt: "1 minutes ago",
+            views: 10,
+            id: 2,
+        },
+        {
+            title: "third go",
+            rating: 5,
+            comments: 0,
+            createdAt: "just right now",
+            views: 0,
+            id: 3,
+        },
+    ];
+*    each video in videos 
+        div 
+            h4=video.title
+            ul 
+                li #{video.rating}/5.
+                li #{video.comments} comments.
+                li Posted #{video.createdAt}.
+                li #{video.views} views.
+
+--> 이 부분을 재사용하고 싶고 복붙을 최소화하고 싶다.
+    데이터를 받을 수 있는 일종의 미리 만들어진 html block.
+--> src/views/mixins/video.pug파일 만들기
+    mixin video(info)
+    div 
+        h4=info.title
+        ul 
+            li #{info.rating}/5.
+            li #{info.comments} comments.
+            li Posted #{info.createdAt}.
+            li #{info.views} views.
+--> home.pug
+    include mixins/video
+       .....
+        each potato in videos 
+        +video(potato)
+----------------------------------------------------------------------------
+* video.pug
+  * 링크로 데이터 넘기는 두 가지 방법
+    -> 변수와 텍스트를 섞어 쓰는 방법 #{}이 attribute(href, class, id)등에는 통하지 않는다.
+  1) a(href="/videos/" + info.id)=info.title
+  2) a(href=`/videos/${info.id}`)=info.title
+* export const see = (req, res) => {
+    const {id} = req.params; /* const id = req.params.id; */
+                               /*  console.log("Show video", id); */
+    const video = videos[id-1];
+    return res.render("watch", {pageTitle: `Watch ${video.title}`});
+};
+---------------------------------------------------------------------]
+* watch.pug
+  -> h3 #{video.views} #{video.views <= 1 ? "view." : "views."} 
+* absolute, relative url
+  href = "/edit"  ->  어디에 있든 상관없이 root + /edit 로 이동.(절대경로)
+  href = "edit"  -> 지금 있는 경로에 edit를 붙인 경로  (상대경로)
+* localhost:4000/profile/edit-profile/password
+  ==> a(href="potato")  ==> localhost:4000/profile/edit-profile/potato
+  ==> a(href="/potato")  ==> localhost:4000/potato
+----------------------------------------------------------------------
+  *  form(action="/save-changes")
+        input(name="title", placeholder="Video Title", value=video.title, required)
+        input(type="submit" value="Save")
+    ==> http://localhost:4000/save-changes?title=hahaha
+    ==> cannot GET /save-changes
+    ==> method의 기본값은 GET
+  * method="POST" 로 바꾸면 ==> http://localhost:4000/save-changes
+    (우리는 별개의 URL을 만들고 싶지 않으므로 action은 뺄거야)
+    ==> http://localhost:4000/videos/1/edit  현재 url로 간다.
+  *(videoRouter.js)
+   videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit); 
+  * res.redirect() 브라우저가 자동으로 우리가 준 url로 이동.(videoControllers.js)
+    export const postEdit = (req, res) => {
+    const {id} = req.params;
+    console.log(req.body);
+    return res.redirect(`/videos/${id}`);
+}  ==> express는 아직 어떻게 form을 처리하는지 모른다.
+   ==> (server.js) app.use(express.urlencoded({extended: true})); 추가.
+       이 middleware를 사용하기위해 우리가 만든 라우터보다 위에 있어야 함.
+   ==> undefined 되었던 console.log(req.body) 값이 찍힌다.
+      { title: 'hoho' }
+   ==> export const postEdit = (req, res) => {
+    const {id} = req.params;
+    const {title} = req.body; /* const title = req.body.title; */
+              /* input에서 유저가 입력한 데이터를 얻을수 있다.
+                 console.log(req.body) */
+    videos[id-1].title = title;
+    return res.redirect(`/videos/${id}`);
+}  ==> 하지만 여기선 가짜 데이타베이스 어레이를 쓰고 있어서 업데이트 되지는 않는다.
+
+*export const postUpload = (req,res) => {
+    /* console.log(req.body); => {}이 출력. 이름을 넣지 않았기때문, 모든 input은 이름이 필요.
+               upload.pug 에서 input에 이름을 넣는다.*/
+    return res.redirect("/");
+};
+  =>     form(method="POST")
+        input(placeholder="Title", required, type="text", name="title")
+        input(type="submit", value="Upload Video")
+ => 이제 console.log(req.body) 하면 { title: 'aaaa' } 뜬다.
+-----------------------------------------------------------------
+(axios)
+-Axios는 브라우저, Node.js를 위한 Promise API를 활용하는 HTTP 비동기 통신 라이브러리입니다.
+쉽게 말해서 백엔드랑 프론트엔드랑 통신을 쉽게하기 위해 Ajax와 더불어 사용합니다.
+- 저는 AJAX보다 AXIOS를 훨씬 많이 사용합니다
+axios 특징
+운영 환경에 따라 브라우저의 XMLHttpRequest 객체 또는 Node.js의 http api 사용
+Promise(ES6) API 사용
+요청과 응답 데이터의 변형
+HTTP 요청 취소
+HTTP 요청과 응답을 JSON 형태로 자동 변경
+* yarn add axios
+
+  npm i axios
+
+  Then...
+
+  import axios from 'axios'
+* axios.get(url,[,config])	
+* import axios from 'axios';
+
+axios.get('https://my-json-server.typicode.com/zofqofhtltm8015/fs/user').then((Response)=>{
+    console.log(Response.data);
+}).catch((Error)=>{
+    console.log(Error);
+})
+실행중 오류가 나신다면? 클릭해주세요!
+[
+  { id: 1, pw: '1234', name: 'JUST' },
+  { id: 2, pw: '1234', name: 'DO' },
+  { id: 3, pw: '1234', name: 'IT' }
+]
+
+* 	axios.post("url주소",{
+    	data객체
+    },[,config])
+
+* axios.delete(URL,[,config]);
+* express path ==> npm install express-path
+
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+     
+     
+     
+
+
+
+
+
+
+
+
+
+
+cd Program Files\MongoDB\Server\5.3\bin
+
+
+It had long since come to my attention that people of accomplishment rarely sat back and let things happen to them. They went out and happened to things.
+Leonardo da Vinci
+
+
+…or create a new repository on the command line
+echo "# wetube-reloaded" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/zumma-seum/wetube-reloaded.git
+git push -u origin main
+
+…or push an existing repository from the command line
+git remote add origin https://github.com/zumma-seum/wetube-reloaded.git
+git branch -M main
+git push -u origin main
+
+<script src="https://kit.fontawesome.com/80ef171902.js" crossorigin="anonymous"></script>

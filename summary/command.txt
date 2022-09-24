@@ -1,0 +1,5 @@
+* cmd 관리자모드: cmd 검색후 ctrl + shift + enter
+* dir /ad : 디렉토리만 보기
+  dir /ah : 숨김 파일만 보기
+  dir /ar : 읽기 전용 파일만 보기
+  dir /as : 시스템 파일만 보기

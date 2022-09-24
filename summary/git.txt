@@ -1,0 +1,258 @@
+1) text editor 설치하기 vscode 등
+2) https://git-scm.com 에서 git download
+3) cmd 에서 git -v 하면 버전확인할수 있다. (혹은 git --version )
+4) git hub desktop 도 설치
+5) git - 우리가 파일들을 트래킹하는 방식. distributed version control system. 
+         모든 파일들의 변경사항을 트래킹함. Git is a free and open source distributed version control stytem designed
+         to handle everything from small to very large projects with speed and efficiency.
+         프로젝트가 있는데 git repository 등록을 했다면 git은 그 프로젝트 안에 있는 모든 파일들을 트래킹.
+         아주 실용적. 뭐가 바뀌었고 어디에서 언제, 누가 바꿨는지 알 수 있음.
+         만약 프로그램을 수정했는데 망가졌다면 그 이전으로 돌아갈 수 있다.
+	 git은 파일들을 binary cd .gitcode로 읽는다. 0들과 1들.텍트스, 음악, 이미지 모든 파일들을 읽을수 있다.
+6) github - 파일을 업로드하는 공간. 우리의 git 변경방식들을. (resume에 github를 안다고 하면 안된다.
+   git을 안다고 해야함. git porvider. 많은 cloud git provider 중 하나. bitbucket, gitlab..
+7) github desktop - git을 위한 make up. 우리가 다운받은 git은 우리의 console에 있다.
+	 	    github가 만든 graphic user interface.
+8) repository - git이 우리의 파일들을 보고있는 폴더. 기본적으로 우리의  파일들이 있는곳이고 git이 주시하고 있는 곳.
+9) git 이 만들어진곳에서 L(윈도우에서는 안되네) 하면 모든 숨겨진 파일까지 보임.
+   그냥 cd .git  하고  code .  하면 vsc에서 많은 파일들을 볼 수 있음.
+* git이라고 치면 git의 사용법이 나온다.
+  usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
+           <command> [<args>]
+
+  These are common Git commands used in various situations:
+
+  start a working area (see also: git help tutorial)
+    clone     Clone a repository into a new directory
+    init      Create an empty Git repository or reinitialize an existing one
+
+  work on the current change (see also: git help everyday)
+    add       Add file contents to the index
+    mv        Move or rename a file, a directory, or a symlink
+    restore   Restore working tree files
+    rm        Remove files from the working tree and from the index
+
+  examine the history and state (see also: git help revisions)
+    bisect    Use binary search to find the commit that introduced a bug
+    diff      Show changes between commits, commit and working tree, etc
+    grep      Print lines matching a pattern
+    log       Show commit logs
+    show      Show various types of objects
+    status    Show the working tree status
+ 
+  grow, mark and tweak your common history
+    branch    List, create, or delete branches
+    commit    Record changes to the repository
+    merge     Join two or more development histories together
+    rebase    Reapply commits on top of another base tip
+    reset     Reset current HEAD to the specified state
+    switch    Switch branches
+    tag       Create, list, delete or verify a tag object signed with GPG
+
+  collaborate (see also: git help workflows)
+    fetch     Download objects and refs from another repository
+    pull      Fetch from and integrate with another repository or a local branch
+    push      Update remote refs along with associated objects
+
+  'git help -a' and 'git help -g' list available subcommands and some
+  concept guides. See 'git help <command>' or 'git help <concept>'
+  to read about a specific subcommand or concept.
+  See 'git help git' for an overview of the system.
+
+*  if you’ve done this kind of thing before or create a new repository on the command line
+  echo "# study" >> README.md
+  git init
+  git add README.md
+  git commit -m "first commit"
+  git branch -M main
+  git remote add origin https://github.com/zumma-seum/study.git
+  git push -u origin main
+
+*  or push an existing repository from the command line
+   git remote add origin https://github.com/zumma-seum/study.git
+   git branch -M main
+   git push -u origin main
+
+* publishing on Github pages
+  static website - 그냥 html, css, javascript로만 이루어진 사이트.
+  font-end만 가능하고 back-end는 다룰수 없다.
+  github가 우리에게 무료 static website를 제공. 무료 호스팅.
+  'gh-pages'라는 branch를 만들어야 한다. public 상태여야. 
+  github에서 2branches를 누르고 gh-pages로 가서 오른쪽에 environment를 보면 github-pages가 active
+  되어있다. 누르고 view deployments를 누르면 내 사이트가 뜬다.  
+  유저네임.github.io/폴더이름 -> zumma-seum.github.io/portfolio
+* README.md
+  markdown 문서. 모든 git repository가 가지고 있어야 되는 파일. #으로 시작해야 된다.
+    
+---- 여기서부터 github desktop
+10)commit - git에 저장하고 싶은 시점.
+11)area - * working directory, working area. 현재 작업하고 있는, 열려있는 곳.
+          * staging, commit되면 github desktop에서 모든 파일들을 staging area로 
+            바로 가게 된다. history에서 볼수 있는데 마음에 안 들면 지울수도 있다.
+          * repository area, commit area,, commit되고 우리가 그 수정사항의 스냅샷을 갖고 있는거지.
+            수정사항, 시간, 누가 수정했는지 등등..
+12)branch - new branch 
+   master: 결말 없음.
+   sad-ending: 슬픈 결말 추가
+   happy-ending: 행복한 결말 추가
+   * 이 시점에 master를 수정했다. 등장인물 이름 등. happy-endgin으로 가서 menu-Branch-Update from Default Branch
+     -> 왼쪽 위에, successfully merged master into happy-ending. 확인할 수 있음. sad-endgin도 동일하게
+   *happy-ending을 선택했을 경우, 이걸 아직 결말이 없는 master에 합치기 위해, 
+    current branch가 master에서 menu-branch-merge into current bruch
+     -> merge into master 박스가 뜬다. default branch 가 master로 되어있고 여기서 happy-ending을 선택.
+     -> 왼쪽 상단에 successfully merged happy-ending into master. 확인할수 있다. 
+13)conflicts in branches(갈등) 만약 서로 다른 사람이 같은 line을 바꾸었다면?
+   master - title:introduction
+   happy branch - 나는 title: introduction 대신에 title: welcome friends라고 썼다.
+   에디터는 master에서 title: prolog로 고쳤다.
+   master로 가서 master와 happy branch를 merge하려고 하면, 
+   박스 하단에 there will be 1 conflicted file when merging happy into master라는 문구가 뜬다.
+   merge를 누르면, resolve conflicts before merging happy into master 박스가 뜬다.
+   open in visual studio code라는 옵셥을 vsc가 준다. vsc는 기본적으로 conflict를 알려주고
+  current change를 알려준다. 
+  (current change) title:prolog
+  (incoming change) title: welcome friends
+  --> vsc 상단에  current change를 accept할 수도 있고, accept incoming change or accept both changes or
+      compare changes. compare changes를 클릭하면 vsc가 무엇이 다른지 비교하며 보여준다.
+      accept both changes를 클릭하면 한 화면에 둘 다 서로 다른 라인으로 보여준다.
+      incoming change를 선택할거면 accept incoming change를 클릭하고 (vsc가 없다면 그냥 delete^^;;)
+      저장을하고 git으로 가면 마지막에 떴던 박스에 no conflicts remaining이라고 뜬다.
+ ---------------------------------------------------------------------
+1) <github>
+   git repository 에서 우측 상단 fork를 볼 수 있다.
+   Fork - git의 기능이 아닌 github의 기능. 우리의 계정으로 전체 repository를 복사해준다.
+          예를 들어, facebook/react -> forking facebook/react
+          우리 github로 복사된 걸 어떻게 내 컴퓨터로 가져 올 수 있을까?
+          git-desktop 에서 왼쪽 current repository에서 add-clone repository를 클릭
+          github에 있는 repository 를 내 컴퓨터로 복사하는 것.
+  내 컴퓨터에서 작업을 하고 commit, push하면 내 github에 변경사항들이 올라간걸 볼 수 있다.
+  그 다음 내가 복사해 온 facebook/react 로 가서 (맨 위족 내 repository 이름 밑에 forked from...)
+  그 repository가 내가 작업한 repository의 코드를 당겨올 수 있는지 물어보면 됨. 
+  부모 저장장소에서 중간쯤 New pull request라는 버튼을 누르면 된다. 
+  compare across forks. 링크를 통해 fork된 repository 와 비교할 수 있다.
+  베이스 코드 저장소의 보유자를 향해 open a pull request기능을 사용할 수 있다.
+  회사는 pull request를 볼 수 있다. 나는 변경사항들을 적어서 create pull request를 눌러 pull request를 만들면 된다.
+  변경된 파일들과 커밋들을 확인할 수 있다.
+  회사 입장에서는 merge pull request버튼이 보인다. 다른 사람들은 댓글만 달 수 있다.
+  회사가 merge pull request버튼을 클릭하면 새로운 커밋이 생기고 이메일 선택하고 comfirm merge버튼을 클릭.
+  -> 코드가 병합된다. 
+  -> Pull request closed라는 메세지를 볼수 있다. if you wish, you can delete your fork of nomadcoders/git-practice.
+     이제 작업이 끝났으니 delete fork 할 수 있다. (이게 좀 헷갈림. 회사가 delete하는 건가?)
+2) 회사의 코드를 fork한 후 , 회사의 코드는 최신으로 업데이트되었는데 내가 fork한 코드는 오래 되었을때.. 어떻게?     
+   내가 작업하는 곳에는 master와 upstream 브랜치가 있다. upstream branch는 베이스 저장소의 마스터 브랜치와 커뮤니케이션 하는 곳이다.
+   fork하면 기본적으로 upstream branch가 만들어진다. upstream을 통해 베이스 저장소의 변경사항을 요청받을 수 있다.
+   current branch master에서 오른쪽 위 fetching origin을 누르면 베이스 저장소의 코드가 fech된다.
+   그 다음 merge하면 된다.
+----------------------------------------------------------------------
+1) github- issues : 프로젝트가 해야 하는데 아직 하지 않은 일이나 사람들이 발견하 ㄴ문제나 버그 같은 것을 기록하는 것.
+   오픈 소스에서 작업할때 보거나 테스터들이 문제를 찾아서 이슈를 적을때 볼 수 있다.
+   issuese작성자나 코드 저장소의 소유자도 이슈를 close할 수 있다.
+   혼자서 일하거나 작은 회사에서 일할 때, 우선 이슈를 생성한다.
+   그리고 pull request를 만들 때, 이 pull request는 저 이슈를 해결하는 거야.. 라고 말하면 된다.
+   해결해야 할 문제들이 여기 이슈로 적혀있는 것. 라벨을 달거나 라벨을 새로 만들수도 있다.
+   큰 회사에는 큰 저장소가 있고 많은 테스터들, 소프트웨어 관리자들, 기술 리더들이 이슈를 만든다.
+   그리고 pull request로 해결되면 이슈가 닫힌다. 사람들은 이렇게 깃을 이용해서 서로 피드백을 주고 받고 
+   이메일이나 슬랙, 회의를 통해 이야기하는 것보다 더 조직적이다.
+   잘 작업된 프로젝트 중에 exop가 있다. github에서 찾아보길.
+2) milestone - 버전을 올릴 때 필요한 것들을 모아두는 것.
+   milestone을 생성하고 그 안에 많은 이슈들을 할당할 수 있다.
+   그 이슈들이 모두 해결되면 마일스톤이 달성된다. 목록을 따로 만드는 것보다 정말 멋진 기능.
+----------------------------------------------------------------------
+(cli log, commit, push)
+*vs code - 파란색: 수정. 초록색: 추가
+           파일에 M : 수정되었다. U: untracked 깃이 아직 이 파일을 관찰하지 않는다. git에 등록되지 않았다.
+           파일명에서 +를 누르면 working area에서 stage area로 바뀐다. staged changed라는 영역이 새로 생김.
+           여기 있는 파일들이 커밋하게 될 파일들. staged changes 위에 입력칸에서 커밋명을 적고 커밋 체크.
+* 커밋 history 보기 -> 터미널에서 git log 변경된 파일 미리보기는 할 수 없지만 커밋 history는 볼수 있다.
+  (HEAD -> master) : 컴퓨터에 커밋된 것.아직 push되지 않은 것.
+  (origin/master) : github의 코드 저장소에 올라간 커밋.
+           
+* git add chapter_two.txt : stage영역에 추가된다.
+  git add . : 편재 폴더에 있는 모든 파일들을 stage영역에 추가.
+  git commit -m "NEW CHAPTER": commit
+  -help : 옵션을 볼 수 있다.
+  git push origin master : push
+  q : git log를 끝낼때
+ ---------------------------------------------------------------
+(checkout and hard reset)
+* 콘솔에서는 항상 작업하는 디렉토리에 있어야 한다.
+* 이전 커밋으로 돌아가고 싶을 때 :
+  git log 하면 
+       commit akdfdkfj3r93820302938  -> 이 부분이 커밋의 별명같은 것.
+  git checkout akdfdkfj3r93820302938
+  git checkout master : 과거로 갔다 아무것도 고치지 않았다면 다시 현재 상태로 돌아올 수도 있다.
+  현재 만든 것이 마음에 들지 않아 이전으로 돌아가고 싶다면, 두 가지 방법이 있다.
+  git checkout 과 삭제.
+  git reset --hard HEAD^ (one commit 앞으로)
+  git reset --hard HEAD^^^ (three commit 앞으로)
+  git push origin master --force (commit을 삭제했는데 github에서는 아직 삭제가 안 되었으므로 강제로 푸시)
+--------------------------------------------------------------------
+(mixed reset)
+* git reset HEAD^ 
+   -> 방금 만들었던 chpater two 가 untracked 된다. 
+      복합 리셋은 마지막 커밋, 혹은 내가 선택한 커밋에서의 변경사항들을 working area로 옮긴다.
+      untracked 상태로 바뀐다. 내가 방금 파일 변경만 하고 commit하지 않은 상태?
+      커밋은 돌아가지만 변경된 파일은 그대로 두는 것.
+      하드 리셋은 이전 커밋으로 돌아가고, 파일 변경 내역을 유지하지 않는다.
+      아직 완료되지 않은 파일을 커밋하는 것과 같은 실수를 한 경우에 복합 리셋을 하면 된다. 파일 변경 내용은 그대로 유지되니까.
+       /* git remote -v 원격 저장소 확인해서 이동. */
+      이 경우에 내 컴퓨터와 깃허브 내역이 다르다.
+      git pull origin master  -> github의 내용을 내 컴퓨터로 옮겨오는 것.
+      -> 코드 변경 사항에 충돌이 생긴다. fix conflicets..
+      -> git add .
+      -> git commit -m "updated origin"
+      -> git push origin master 전에 작업했던 내용은 사라지고 새로고침됨.
+      -> 니꼬는 대부분의 경우 , git push origin master --force를 사용 add부터의 과정을 건너뛴다.
+-----------------------------------------------------------------------
+(soft reset)
+* 소프트 리셋은 이전 커밋에서 변경한 내역을 unstage영역에 두지 않는다. 대신 stage영역에 추가한다.
+  unstage영역(working area)에 작업중인 파일이 있을 때 섞이고 싶지 않으면 소프트 리셋을 사용하면 된다.
+  
+  git reset HEAD^^ --soft
+
+
+-----------------------------------------------------------------
+gh-pages      
+zumma-seum.github.io/zumma
+
+
+-------------------------------------------------------------------
+파일 삭제하기
+1. 로컬 디렉토리와 git 저장소에서 모두 삭제
+$ git rm HelloWorld.java
+$ git commit -m "Delete HelloWorld.java"
+파일을 삭제한 후 commit & push를 꼭 해주어야 합니다.
+
+
+2. 로컬 디렉토리에서는 삭제하지 않고 git에서만 삭제
+실수로 .class 같은 커밋하지 말아야 할 파일들을 커밋하는 경우가 있다. 이런 경우 다음 명령어를 사용하면 로컬 디렉토리의 파일은 유지한 채 git에서만 삭제할 수 있다.
+
+$ git rm --cached HelloJAVA.class
+$ git commit -m "Delete HelloJAVA.class"
+
+
+폴더 삭제하기
+1. 로컬 디렉토리와 git 저장소에서 모두 삭제
+$ git rm -rf 폴더명
+$ git commit -m "delete folder"
+
+2. 로컬 디렉토리의 폴더는 유지한 채 git 저장소에서만 폴더 삭제하기
+이클립스와 git을 연동하여 commit & push 하던 중 bin 폴더와 src 폴더를 모두 commit & push를 해서 bin 폴더는 git 저장소에서 삭제하고자 한다.
+
+$ git rm --cached -r bin/
+$ git commit -m "delete folder"
+      
+    
+   
+ 
+   
+   
+   
+   
+          
+
+

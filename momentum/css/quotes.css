@@ -1,0 +1,10 @@
+#quote {
+    margin: 230px 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    line-height: 30px;
+    color: white;
+    font-size: 17px;
+    text-shadow: 2px 2px 2px #000;
+}

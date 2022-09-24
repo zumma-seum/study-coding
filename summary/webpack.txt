@@ -1,0 +1,191 @@
+* Webpack - 내가 쓰는 최신 코드들을 모든 브라우저가 인식할 수 있게 도와주는 것이 webpack.
+            아직까지는 업계 표준이지만, 한 번 만들어 놓으면 변화시킬 일 없이 계속 쓰므로 실제로
+            webpack configuration을 할 필요를 접하기는 힘들다. 
+            또 react.js, vue.js, svelte.js, next.js를 쓴다면 대부분의 큰 프레임워크들은 
+            Webpack 설정을 노출시키지 않는다. 그래서 개발자들은 일반적으로 webpack을 작성할 일이 없다.
+            최신 js를 오래된 버전의 js로 바꾸거나 sass를 css로 변경. 이미지 파일을 압축하기도.
+* npm i webpack webpack-cli -D  (또는 npm i webpack webpack-cli --save-dev)
+  -> webpack-cli를 통해 webpack을 console에 불러낼수 있다.
+* 우리가 할 일은 웹팩에게 어디에 소스 파일이 있고 변형된 파일을 어디에 저장하면 되는지 가르쳐 주는것.
+* webpack.config.js 파일 생성. 이 파일은 오래된 js파일만 인식.
+  module.exports = {
+    entry: "./src/client/js/main.js",
+    output: {
+        filename: "main.js",
+        path: "./assets/js",
+    },
+};
+
+*src 에 client(또는 asset) 폴더를 만든다. 여기는 서버가 아닌 브라우저에서 실행될 파일들이 있는 곳.
+ client에 js폴더를 만들고 그 밑에 main.js를 만든다.
+* package.json 파일의 scripts에 추가.
+  "assets": "webpack --config webpack.config.js"
+  --> npm run assets
+  --> Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+      - configuration.output.path: The provided value "./assets/js" is not an absolute path!
+      -> The output directory as **absolute path** (required) 이런 에러가 생김.
+  --> webpack.config.js 맨 상단에 
+      console.log(__dirname); 추가해 본다. __dirname은 javascript가 제공하고 있는 상수.
+      내 경우엔 C:\Users\user\Desktop\Projects\CSS-master 이 나왔음.
+      path.resolve()가 하는 역할은 몇 개가 됐든 내가 입력하는 파트들을 모아서 경로로 만들어 준다.
+  --> const path = require("path");
+      console.log(path.resolve(__dirname,"assets","js")); 추가 해 본다.
+      그럼 위와 같이 우리가 필요한 전체 경로(absolute path)가 출력.
+  --> webpack.config.js 파일
+      const path = require("path");
+
+      module.exports = {
+        entry: "./src/client/js/main.js",
+        output: {
+            filename: "main.js",
+            path: path.resolve(__dirname, "assets", "js"),
+        },
+      };
+   --> 실행하면 루트에 assets/main.js 생성 warning 뜸.
+------------------------------------------------------------
+* rules -> 우리가 각각의 파일 종류에 따라 어떤 전환을 할 건지 결정하는 것.
+  loader -> 웹펙이 css파일들에 변환들을 적용시키는 것. 내가 어떤 종류의 파일을 가지고 있든지 loader를 찾으면 됨.
+            우리의 경우엔 babel-loader.
+  npm install -D babel-loader
+  webpack.config.js 에 추가.
+ module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env", { targets: "defaults" }]],
+          },
+        },
+      },
+    ],
+  },
+  ----> 니꼬는 assets/js/main.js에 변화가 있는데 난 없네... 왜?
+  --> entry 밑에  mode: "development", 추가.
+--------------------------------------------------------------------------
+* server.js에 추가
+  app.use("/static", express.static("assets"));
+  --> static file : express한테 사람들이 이 폴더 안에 있는 파일들을 볼 수 있게 해달라고 요청하는 것.
+      기본적으로 폴더들은 공개되지 않는다. 서버가 어떤 폴더를 공개할지 정함.
+  base.pug 에 script(src="static/js/main.js")  추가
+----------------------------------------------------------------------
+*src/scss/styles.scss, src/scss/_variavles.scss 파일 생성.
+
+scss 파일을 css파일로 바꾸는 loader.
+폰트 같은걸 불러올 때 css에 유용하기 쓰이는 loader.
+변환한 css를 웹사이트에 적용시키는 loader.
+
+
+* sass-loader 설치. scss를 css로 변환
+  npm install sass-loader sass webpack --save-dev
+* css-loader 설치. @import랑 url()을 풀어서 해석해 주는것.
+  npm install --save-dev css-loader
+* style-loader 설치. css를 DOM에 주입.
+  npm install --save-dev style-loader
+*   {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"],
+      },  webpack.config.js 에 추가
+
+  마직막부터 역순으로 적용시킨다.웹팩은 뒤에서부터 시작.
+---> 됐어~~~
+-----------------------------------------------------------------
+* js 파일에 css를 넣고 싶지 않다. js가 로딩될때까지 기다리지 않고 바로 화면이 로딩되길 바란다.
+  MiniCssExtractPlugin 사용. css를 분리하는 플러그인. 해당 코드를 다른 파일로 분리시키는 파일.
+  npm install --save-dev mini-css-extract-plugin
+* webpack.config.js 에 추가
+  const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+    plugins: [
+    new MiniCssExtractPlugin({
+      filename: "css/styles.css",
+    }),
+  ],
+
+  use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+
+-----------------------------------------------------------------------
+* 매번 assets폴더를 지우고 자동으로 npm run assets 실행되게.
+* webpack.config.js 에 
+  wathch:true, 추가  -> 매번 npm run assets 실행할 필요가 없다.
+  clean: true, -> output folder를 build하기 전에 clean.
+
+* module.exports = {
+  entry: "./src/client/js/main.js",
+  mode: "development",
+  watch: true,
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "css/styles.css",
+	@@ -12,6 +13,7 @@ module.exports = {
+  output: {
+    filename: "js/main.js",
+    path: path.resolve(__dirname, "assets"),
+    clean: true,
+  },
+  module: {
+    rules: [
+
+* front-end 를 수정할때마다 서버가 실행되길 원치 않기때문에
+  nodemon.json 파일을 만든다.
+{
+  "ignore": ["webpack.config.js", "src/client/*", "assets/*"],
+  "exec": "babel-node src/init.js"
+}
+  -> scripts 수정 ->
+  "scripts": {
+    "dev:server": "nodemon",
+    "dev:assets": "webpack"
+  },
+
+.gitignore 파일 수정.
+
+/node_modules
+.env
+/uploads
+.DS_Store
+/assets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

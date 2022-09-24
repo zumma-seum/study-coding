@@ -1,0 +1,77 @@
+* Gulp.js를 사용해서 어떻게 webpack를 대체할수 있는지, 개발자로써 어떻게 워크플로우를 자동화 할 수 있는지 배워.
+  task runner로 알려져 있음.
+  우리가 수많은 task를 만들고 gulp에서 그 task를 실행하면 gulp가 그 결과를 우리에게 줌.
+* 1) global NPM Package에 gulp를 설치해줘야 함.
+   -> npm install gulp-cli -g  (또는 yarn add gulp-cli -g)
+   -> mkdir supergulp  (supergulp 라는 폴더 만듬)
+   -> cd supergulp
+   -> mkdir src (컴파일되길 원하는 모든 파일이 들어갈것임)
+   -> mkdir src/scss src/js src/img
+   -> src/index.pug파일 만들기
+   -> mkdir src/partials
+   -> mkdir src/templates
+   -> src/js/util.js 만들기
+   -> scss/style.scss  scss/_variables.scss  scss/_reset.scss 만들기
+   -> partials/header.pug  partials/footer.pug  만들기
+   -> templates/layout.pug
+   -> img 폴더에 로고 이미지 넣기
+2) yarn init or npm init
+   파일들 작성
+3)  react 같은 걸로 작업하지 않고 node.js랑 여러 정적 파일들을 가지고 작업한다면
+    이것이 일반적 작업환경
+4) super-gulp/gulpfile.js 파일을 만든다. (root에) -> 필수파일. 이름바꾸지 말것.
+   /* gulpfile.js */
+    var gulp = require("gulp");
+5) package.json 파일에
+   "scripts": {
+	"dev": "gulp dev",
+        "build": "gulp build"
+   } 추가
+6) npm install --save-dev gulp  (yarn add gulp -D)  -> node_modules 생성
+  .gitignore 파일 생성. -> /node_modules
+7) npm run dev (yarn dev)
+8) gulpfile.js 생성.
+   import gulp from "gulp";
+9) 위의 최신 js를 gulp이 이해하지 못해서 error가 생긴다.
+   gulpfile.js 를 gulpfile.babel.js 로 변경
+10) .babelrc 파일 생성(루트에)
+    {
+    "presets": ["@babel/preset-env"]
+    }
+11) npm install @babel/register, npm install @babel/core
+    ( yarn add @babel/{register,core}
+12)npm install @babel/preset-env (yarn add @babel/preset-env)
+13) "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/register": "^7.18.6"
+    을 devDependencies로 옮긴다.
+14) npm run dev 실행된다.
+
+* scss 를 위해서..
+  npm install gulp-cli -g 
+  npm init
+  npm install --save-dev gulp 
+  npm install del --save-dev
+npm install @babel/register
+ npm install @babel/core
+npm install @babel/preset-env
+  npm install --save-dev gulp-autoprefixer
+  npm install gulp-csso --save-dev
+  npm install sass gulp-sass --save-dev
+  npm install -g node-sass 
+  -> 모두 dependencies로 옮김
+
+* npm install -g n
+  n12  
+  -> node 12로 버전 다운?
+  
+-----------------------------------------------------
+
+
+
+
+
+
+npm install gulp -D
+npx -p touch nodetouch fulpfile.js
+gulp

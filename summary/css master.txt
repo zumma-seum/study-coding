@@ -1,0 +1,278 @@
+* display : inline -  no width, height,
+            block, inline-block, flex, none
+* display:flex(default:row),
+ justify-content(main-axis)  -> 이 경우 row,
+ align-item(cross-axis) -> 이 경우 column. 세로. 모두 부모에게 적용해야 함.
+display:flex,
+flex-direction: column
+ justify-content(main-axis)  -> 이 경우 column,
+ align-item(cross-axis) -> 이 경우 row. 세로. 모두 부모에게 적용해야 함.
+* justify-content: strech 등을 줄 때는 width나 height 값이 없어야 적용됨.
+* align-self, justify-self, order : 자식에게 적용할 수 있는 것. 자식 중 하나의 아이템에게만 적용하고 싶을때ㅣ
+  order의 기본 값은 0, order:1로 적용하면 다른 기본값을 가지고 있는 것들이 먼저 순서하고 1은 다음에 온다.
+* flex는 모든 아이템의 사이즈 변경을 해서라도 한 줄에 다 구겨넣는다(nowrap)
+  flex-wrap: wrap -> 사이즈를 유지하면서 다음칸으로 옮겨놓는다.
+  flex-direction:row-reverse -> 순서가 바뀜
+  flex-wrap:wrap-reverse 도 있음.
+* align-content   -> modify line, justify-content와 같지만 줄에 관한것.
+* flex-grow, flex-shrink -> 자식에게 줄수 있는 property.
+  flex-wrap: nowrap 일경우, flex-shrink: 1  -> 사이즈가 작아질때 어떤 것이
+  찌그러들지 결정할 수 있음. 기본값은 1.
+  .child:nth-child(2) { flex-shrink:2 }  -> 2번째 박스가 2배로 줄어든다.
+  flex-grow:1 윈도우 사이즈가 커질때 다른 것들보다 커짐. 기본값은 0
+* flex-basis -> child에 적용되는 property.
+  flex-basis: 300px; shirink나 grow가 적용되기 전 사이즈.
+                     flex-direction 이 row일때 width에 적용.
+                     main-axis 에 적용됨. width, height에 px값을 적용하는 것보다
+                     이렇게 element에 기본 크기를 정하고 조금 늘어나거나 줄어들게 하는게 더 나음.
+  부모의 값이 height: 100vh 등으로 설정되면 자식에게 flex-basis: 30% 등으로 설정할수 있음.
+*flexbox froggy game.
+-------------------------------------------------------------------------
+* grid -> father에서.
+  .father {
+      display:grid;
+	grid-template-columns: 250px 250px 250px; (이 순서 크기로 반복적으로 모든 컬럼에 적용된다.)	
+	grid-template-rows : 100px 50px 300px;
+	column-gap: 10px;
+	row-grp: 10px;     -> 하나로 gap: 10px 해도.
+  }
+* grid 의 repeat함수 
+ .grid {
+  grid-template-columns: repeat(4,200px);  -> 200px 로 4개 만듬.
+                         -> auto 200px; 로 하면 화면의 모든 공간을 사용.
+  grid-template-rows: 100px repeat(2,200px) 100px;
+  grid-template-areas:
+	"header header header header"
+	"content content content nav"  -> content content . nav 하면 . 부분이 빈다.
+	"content content content nav"
+	"footer footer footer footer"
+  }
+  .header { grid-area: header; }
+  .content { grid-area: content; }
+  .nav { grid-area: nav; }
+  .footer { grid-area: footer; }  #2ecc71, #3498db, #8e44ad. #f39c12 색깔조합 좋네.
+----------------------------------------------------------------------------
+  .header {
+	grid-column-start:1;
+	grid-column-end:1;  -> grid-column-end:5  -> 이러면 컬럼 네개가 합쳐짐.
+  }  -> 아무일도 안 일어난다. 첫번째 세로 라인에서 시작 두번째 세로라인에서 끝난다는 의미.
+  .content {
+	grid-column-start:1;
+	grid-column-end:4;   (grid-column: 1/ -2)
+	grid-row-start:2;
+	grid-row-end:4;  ( = grid-row: 2/4 = grid-row:2/-2)   
+  }                                       4줄일경우
+-----------------------------------------------------------
+  .header {
+	grid-column: 1/5;  (= grid-column: 1/ -1 :끝에서 왼쪽으로)
+  }	
+  .header {
+	grid-column: span 4;
+  }
+  .content {
+	grid-row: 2/ span 2;  -> 앞에 있는 2는 시작점.
+   }
+------------------------------------------------------------
+* line에 이름 주기
+  grid-template-columns: [first-line] 100px [second-line] 100px [third-line] ...
+  grid-column: first-line/ fourth-line;
+  grid-template-rows: repeat(4, 100px [sexy-line]);
+  grid-row: sexy-line 1/ sexy-line 3;  --> repeat 하면 첫번째 라인이 없대요..
+ -------------------------------------------------------------- 
+* grid-template-columns: repeat(4, 1fr);  -> fraction
+       사용가능한 공간을 의미. 공간을 가질수 있는만큼 가지고 4번 반복해.
+       화면 전체에 네모가 네개. grid 안에서 가능한 공간. 만약 .grid 등에
+       500px 등을 주면 그 안에서.
+  grid-template-columns: 4fr 1fr 1fr 1fr  -> 첫번째 컬럼이 4배가 됨.
+  .grid {
+	display: grid;
+	height: 50vh;
+	gap: 10px;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: repeat(4, 1fr);  -> 높이가 있어야 보인다.
+  }  
+  .grid {
+	grid-template: 
+	  "header header header header" 1fr  -> how tall is the row
+          "content content content nav" 2fr
+	  "footer footer footer footer" 1fr / 1fr 1fr 1fr 1fr;  -> 각 컬럼 크기
+  }    -> 니꼬는 이게 맘에 든다고. 보기 쉽고 화면 크기가 변해도 비율이 똑같다.
+   또는
+  .grid {
+	grid-template: 
+	  [header-start]"header header header header" 1fr [header-end]  -> how tall is the row
+          [content-start]"content content content nav" 2fr[content-end]
+	  [footer-start]"footer footer footer footer" 1fr [footer-end] / 1fr 1fr 1fr 1fr;  -> 각 컬럼 크기
+  }  -> 이름을 줄 수도 있다. 
+--------------------------------------------------------------------------------------
+* justify-items: strech; 기본, align-items:strech  -> 부모에게 적용
+  place-items: strech center; 한번에 쓰는 방법, 수직으로 늘어나고 수평은 가운데.
+* item은 각각의 하나하나, content는 grid 전체, row 전체, column 전체
+  justify-content, align-content, place-content: end center
+* align-self, justify-self, place-self 자식에게 적용.
+-----------------------------------------------------
+* .grid {
+	grid-template-columns: repeat(4, 100px);
+	grid-auto-rows: 100px;  -> html등에 더많은 데이터가 있다면 자동으로 적용.
+  }
+  grid-auto-columns : 100px -> 설정한 것보다 더 많은 데이터가 있어 자동 컬럼 생성
+  gird-auto-flow: column; 이 경우 순서가 위에서 아래로 바뀐다. row가 디폴트
+----------------------------------------------------
+*minmax -> 가능한 엄청 크길 원하지만 작진 않길 원할때
+ grid-template-columns: repeat( 6, minmax(100px, 1fr)); 
+    -> 화면을 줄여도 최소 100px 크기는 되고 최대치는 1fr이 되길. 스크롤이 생김.
+
+* min-content max-content
+  grid-template-columns: max-content min-content;
+           -> 글 등 내용이 다 들어갈만큼 크게, 최소한으로 작게
+  minmax, repeat, min-content, max-content를 조합하면 완벽한 반응형 사이트를 만들수 있음.
+  .grid {
+	grid-template-columns: repeat(5, minmax(max-content, 1fr));
+    또는 grid-template-columns: repeat(auto-fill, minmax(20px, max-content));
+    또는 grid-template-columns: repeat(auto-fit, minmax(20px, max-content));
+  }
+* grid garden game
+---------------------------------------------------------------
+< SCSS -> CSS Preprocessors >
+* Sass 나 Scss 나 같은 방식으로 사용함. Sass가 먼저 쓰여졌는데 Scss와 Sass는 다른
+  syntax를 가지고 있어서 SCSS 가 Sass를 위한 공식적인 syntax로 릴리즈 되었음.
+* preprocessor로는 stylus, less 등이 있음. scss를 평범한 css로 바꿈.
+  SCSS는 CSS를 프로그래밍 언어처럼 만든다. 사용하기가 쉽지는 않아 컴파일하거나 빌드해야함.
+*gulp -> compile하거나 transform 해주는 nodeJS 패키지.
+         새로운 코드를 오래된 코드로 바꾸거나 SCSS, Sass를 CSS로 바꿈.
+
+
+----------------------------------------------------------------
+<styles.scss>
+@import "./_variables";
+@import "_mixins";
+
+body {
+    background-color: $bg;
+    color: yellow;
+  }
+h1 {
+  @include good();
+}
+h2 {
+  font-size: $title;
+  color: $white;
+}
+.box {
+  &:hover {
+    background-color: goldenrod;
+  }
+  h2 {
+    color: blue;
+  }
+  button {
+    color: red;
+    margin: 10px;
+    &:hover {
+      color: pink;
+    }
+  }
+}
+
+<_mixins.scss >  -> 다이나믹하게 변하는 곳에서 쓸수 있다. 상황에 따라 다르게 코딩하고 싶을 때.
+@mixin good {
+    color: yellow;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+------------------------------------------
+@mixin link($color) {
+    text-decoration: none;
+    display: block;
+    color: $color;
+}
+
+a {
+  margin-bottom: 10px;
+ 
+  &:nth-child(odd) {
+    @include link(green);
+  }
+  &:nth-child(even) {
+    @include link(wheat);
+  }
+}
+-------------------------------------------
+@mixin link($word) {
+    text-decoration: none;
+    display: block;
+    @if $word == "odd"{
+        color:beige;
+    } @else {
+        color: green;
+    }
+}
+
+a {
+  margin-bottom: 10px; 
+  &:nth-child(odd) {
+    @include link("odd");
+  }
+  &:nth-child(even) {
+    @include link("even");
+  }
+}
+---------------------------------------------------
+<extends> 같은 코드를 반복해서 쓰고 싶지 않을 때. page에서 분리해야하는 element들이 많을 때 유용.
+          button, title, card, navigation 등에 적용할때.
+_buttons.scss 를 만든다.
+
+------------------------
+<Mixins> 반응형 웹디자인을 가능케 하는.
+https://www.bourbon.io/  추천.
+
+(styles.scss)
+
+@import "_mixins";
+
+h1 {
+  color: red;
+  @include responsive("iphone") {
+    color: yellow;
+  }
+  @include responsive("iphone-l") {
+    font-size: 60px;
+  }
+  @include responsive("tablet") {
+    color: green;
+  }
+}
+
+
+(_mixins.scss)
+$minIphone: 500px;
+$maxIphone: 690px;
+$minTablet: $minIphone + 1;
+$maxTablet: 1120px;
+
+@mixin responsive($device) {
+  @if $device == "iphone" {
+    @media screen and (min-width: $minIphone) and (max-width: $maxIphone) {
+      @content;
+    }
+  } @else if $device == "tablet" {
+    @media screen and (min-width: $minTablet) and (max-width: $maxTablet) {
+      @content;
+    }
+  } @else if $device == "iphone-l" {
+    @media screen and (max-width: $minIphone) and (max-width: $maxIphone) and (orientation: landscape) {
+      @content;
+    }
+  } @else if $device == "ipad-l" {
+    @media screen and (min-width: $minTablet) and (max-width: $maxTablet) and (orientation: landscape) {
+      @content;
+    }
+  }
+}
+
+
+
+
+
+
+
